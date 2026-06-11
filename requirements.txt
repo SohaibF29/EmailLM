@@ -1,0 +1,31 @@
+# =============================================================================
+# Llama 3.1 8B Instruct — Enron Email Fine-Tuning Pipeline
+# =============================================================================
+
+# Core ML
+torch>=2.1.0
+transformers>=4.43.0
+peft>=0.12.0
+bitsandbytes>=0.43.0
+trl>=0.9.0
+datasets>=2.20.0
+accelerate>=0.33.0
+
+# Evaluation
+rouge-score>=0.1.2
+nltk>=3.8.0
+evaluate>=0.4.0
+bert-score>=0.3.13
+
+# App / Deployment
+gradio>=4.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+pandas>=2.0.0
+
+# Utilities
+scikit-learn>=1.3.0
+jupyterlab>=4.0.0
+tensorboard>=2.14.0

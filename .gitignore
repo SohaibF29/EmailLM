@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Project Datasets (Keep raw files and prepared JSONLs off Git)
+data/raw/maildir/
+data/*.json
+data/raw.json
+data/train.json
+data/val.json
+
+# Model outputs, checkpoints and adapters
+outputs/
+*.bin
+*.pt
+*.pth
+*.safetensors
+
+# Logs and TensorBoard
+logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
