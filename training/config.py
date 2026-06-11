@@ -43,7 +43,7 @@ def get_device_info() -> dict:
     return {
         "device": "cuda",
         "name": torch.cuda.get_device_name(0),
-        "vram_gb": round(torch.cuda.get_device_properties(0).total_mem / 1e9, 1),
+        "vram_gb": round(torch.cuda.get_device_properties(0).total_memory / 1e9, 1),
         "capability": torch.cuda.get_device_capability(),
         "compute_dtype": str(detect_compute_dtype()),
     }
