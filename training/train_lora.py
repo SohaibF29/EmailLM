@@ -103,7 +103,7 @@ def load_quantized_model(config: PipelineConfig):
         quantization_config=quant_config,
         device_map="auto",
         trust_remote_code=config.model.trust_remote_code,
-        use_auth_token=config.model.use_auth_token,
+        token=config.model.use_auth_token,
     )
 
     # Prepare for k-bit training (freeze base, cast norms to float32)
