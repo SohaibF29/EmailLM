@@ -178,6 +178,22 @@ def create_training_args(config: PipelineConfig) -> TrainingArguments:
     )
 
 
+def validate_packing_compatibility(config: PipelineConfig) -> None:
+    """Validate packing compatibility for TRL and data collators."""
+    if not config.data.packing:
+        return
+
+    logger.warning(
+        "packing=True is enabled for TRL SFTTrainer. "
+        "Make sure you are not passing an incompatible custom data collator or custom collate_fn."
+    )
+    if config.training.remove_unused_columns:
+        logger.warning(
+            "packing=True with remove_unused_columns=True may be incompatible with some TRL versions. "
+            "If you see data-collator errors, set config.data.packing=False or config.training.remove_unused_columns=False."
+        )
+
+
 def log_memory_usage() -> None:
     """Log current GPU memory usage."""
     if torch.cuda.is_available():
@@ -238,13 +254,13 @@ def train(config: PipelineConfig) -> None:
 
     # 6. Training arguments
     training_args = create_training_args(config)
+    validate_packing_compatibility(config)
 
     # 7. Create SFTTrainer
     trainer = SFTTrainer(
         model=model,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        dataset_text_field="text",
         max_seq_length=config.data.max_seq_length,
         tokenizer=tokenizer,
         args=training_args,
@@ -302,6 +318,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--per_device_train_batch_size", type=int, help="Batch size")
     parser.add_argument("--gradient_accumulation_steps", type=int, help="Gradient accumulation")
     parser.add_argument("--max_seq_length", type=int, help="Maximum sequence length")
+    parser.add_argument("--packing", action="store_true", help="Enable TRL example packing")
     parser.add_argument("--lora_r", type=int, help="LoRA rank")
     parser.add_argument("--lora_alpha", type=int, help="LoRA alpha")
     parser.add_argument("--lora_dropout", type=float, help="LoRA dropout")
@@ -327,6 +344,8 @@ def apply_cli_overrides(config: PipelineConfig, args: argparse.Namespace) -> Pip
         config.training.gradient_accumulation_steps = args.gradient_accumulation_steps
     if args.max_seq_length:
         config.data.max_seq_length = args.max_seq_length
+    if args.packing:
+        config.data.packing = True
     if args.lora_r:
         config.lora.r = args.lora_r
     if args.lora_alpha:
